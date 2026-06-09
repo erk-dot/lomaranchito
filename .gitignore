@@ -1,0 +1,6 @@
+# GA4 / Google API credentials — never commit these
+ga4-oauth.json
+ga4-key.json
+client_secret_*.json
+token.json
+*.token.json
