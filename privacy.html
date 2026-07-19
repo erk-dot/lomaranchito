@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy — Loma Ranchito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Privacy Policy — lomaranchito.com</title>
+    <meta name="description" content="Privacy policy for lomaranchito.com — how this site uses cookies, Google Analytics, and Google AdSense, and what choices you have.">
+    <link rel="canonical" href="https://lomaranchito.com/privacy.html">
+    <meta name="robots" content="noindex, follow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Public+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="site.js" defer></script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LC1MYZP8YW"></script>
@@ -15,264 +22,123 @@
       gtag('config', 'G-LC1MYZP8YW');
     </script>
 
-    <style>
-        :root {
-            --navy:       #1B3A5C;
-            --slate-blue: #2E5F8A;
-            --sky:        #5B9EC9;
-            --pale-sky:   #A8CEDE;
-            --mist:       #D6E9F3;
-            --soft-white: #F4F9FC;
-            --warm-white: #FDFEFE;
-            --gold:       #C8963E;
-            --light-gold: #E8C47A;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Lato', sans-serif;
-            background-color: var(--warm-white);
-            color: var(--navy);
-            line-height: 1.7;
-        }
-
-        /* NAV */
-        nav {
-            background-color: var(--navy);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        nav .logo {
-            font-family: 'Playfair Display', serif;
-            color: var(--mist);
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-
-        nav ul a {
-            color: var(--pale-sky);
-            text-decoration: none;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
-        nav ul a:hover { color: var(--light-gold); }
-
-        /* PAGE HEADER */
-        .page-header {
-            background: linear-gradient(160deg, var(--navy) 0%, var(--slate-blue) 50%, var(--sky) 100%);
-            padding: 5rem 2rem 4rem;
-            text-align: center;
-        }
-
-        .page-header .section-label {
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--pale-sky);
-            margin-bottom: 0.75rem;
-        }
-
-        .page-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
-            color: var(--soft-white);
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        .page-header p {
-            color: var(--mist);
-            font-size: 0.95rem;
-            font-weight: 300;
-        }
-
-        /* CONTENT */
-        .content {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 4rem 2rem 5rem;
-        }
-
-        .divider {
-            width: 50px;
-            height: 3px;
-            background-color: var(--gold);
-            margin-bottom: 2rem;
-        }
-
-        h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--navy);
-            margin-top: 2.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        h2:first-of-type {
-            margin-top: 0;
-        }
-
-        p {
-            color: var(--slate-blue);
-            margin-bottom: 1rem;
-            font-size: 1.05rem;
-        }
-
-        a {
-            color: var(--gold);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .last-updated {
-            font-size: 0.8rem;
-            color: var(--slate-blue);
-            opacity: 0.7;
-            margin-bottom: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* FOOTER */
-        footer {
-            background-color: var(--navy);
-            color: var(--pale-sky);
-            text-align: center;
-            padding: 2rem 1.5rem;
-            font-size: 0.8rem;
-        }
-
-        footer .footer-fb {
-            margin-top: 0.75rem;
-        }
-
-        footer .footer-fb a {
-            color: var(--light-gold);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
-        }
-
-        footer .footer-fb a:hover {
-            color: var(--pale-sky);
-        }
-
-        footer .footer-fb svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-            flex-shrink: 0;
-        }
-
-        footer .footer-links {
-            margin-top: 0.75rem;
-        }
-
-        footer .footer-links a {
-            color: var(--pale-sky);
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: color 0.3s;
-        }
-
-        footer .footer-links a:hover {
-            color: var(--light-gold);
-        }
-
-        @media (max-width: 768px) {
-            nav ul { display: none; }
-        }
-    </style>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9094032428607043"
+         crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <!-- NAV -->
-    <nav>
-        <a class="logo" href="index.html">Loma Ranchito</a>
-        <ul>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#history">History</a></li>
-            <li><a href="things-to-do.html">Things to Do</a></li>
-            <li><a href="culture.html">Culture</a></li>
-            <li><a href="getting-there.html">Getting There</a></li>
-        </ul>
-    </nav>
+<div class="ribbon" aria-hidden="true"></div>
 
-    <!-- PAGE HEADER -->
-    <div class="page-header">
-        <p class="section-label">Legal</p>
+<header class="site-head">
+    <div class="head-inner">
+        <a class="brand" href="index.html">Loma <em>Ranchito</em></a>
+        <span class="brand-tag"><svg class="flag-pa" viewBox="0 0 30 20" role="img" aria-label="Flag of Herrera Province"><rect width="30" height="10" fill="#FCDD09"/><rect y="10" width="30" height="10" fill="#0F47AF"/><g fill="#0F47AF"><circle cx="5" cy="7" r="0.9"/><circle cx="8.3" cy="5.2" r="0.9"/><circle cx="11.7" cy="4" r="0.9"/><circle cx="15" cy="3.6" r="0.9"/><circle cx="21.7" cy="5.2" r="0.9"/><circle cx="18.3" cy="4" r="0.9"/><circle cx="25" cy="7" r="0.9"/></g></svg>Herrera · Azuero · Panamá<svg class="flag-pa" viewBox="0 0 30 20" role="img" aria-label="Flag of Panama"><rect width="30" height="20" fill="#FFFFFF"/><rect x="15" width="15" height="10" fill="#D21034"/><rect y="10" width="15" height="10" fill="#005293"/><polygon fill="#005293" points="7.5,2 8.205,4.029 10.353,4.073 8.641,5.371 9.263,7.427 7.5,6.2 5.737,7.427 6.359,5.371 4.647,4.073 6.795,4.029"/><polygon fill="#D21034" points="22.5,12 23.205,14.029 25.353,14.073 23.641,15.371 24.263,17.427 22.5,16.2 20.737,17.427 21.359,15.371 19.647,14.073 21.795,14.029"/></svg></span>
+    </div>
+</header>
+
+<nav class="site-nav" aria-label="Main">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="loma-ranchito.html">Loma Ranchito</a></li>
+        <li><a href="herrera.html">Herrera</a></li>
+        <li><a href="azuero.html">Azuero</a></li>
+        <li><a href="festivals.html">Festivals</a></li>
+        <li><a href="food.html">Food &amp; Drink</a></li>
+        <li><a href="culture.html">Culture</a></li>
+        <li><a href="nature.html">Nature</a></li>
+        <li><a href="getting-there.html">Getting There</a></li>
+        <li><a href="about.html">About</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <section class="page-hero">
+        <span class="eyebrow">The Legal Bit</span>
         <h1>Privacy Policy</h1>
-        <p>How we handle data on Lomaranchito.com</p>
-    </div>
+        <p class="lede">What this site collects, why, and the choices you have. Last updated: July 17, 2026.</p>
+        <svg class="hills" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+            <path fill="#2B63D9" opacity="0.5" d="M0,90 C240,30 480,110 720,70 C960,30 1200,100 1440,60 L1440,150 L0,150 Z"/>
+            <path fill="#FCDD09" opacity="0.28" d="M0,110 C300,60 600,130 900,90 C1100,65 1300,110 1440,85 L1440,150 L0,150 Z"/>
+            <path fill="#FBFAF5" d="M0,122 C260,88 520,142 780,116 C1040,90 1240,136 1440,112 L1440,150 L0,150 Z"/>
+        </svg>
+    </section>
 
-    <!-- CONTENT -->
-    <div class="content">
-        <p class="last-updated">Last updated: June 2026</p>
-        <div class="divider"></div>
+    <div class="crumbs"><a href="index.html">Home</a> › Privacy Policy</div>
 
-        <h2>Overview</h2>
-        <p>This website, Lomaranchito.com, is an independent informational guide about Loma Ranchito, a small community in Herrera Province, Panama. We are committed to being transparent about how this site operates with respect to data and your privacy.</p>
+    <section class="band">
+        <div class="wrap-narrow prose">
+            <h3>Who we are</h3>
+            <p>lomaranchito.com is an independent, personally maintained informational website about Loma Ranchito and the Herrera–Azuero region of Panama. For anything in this policy, you can reach us at <a href="mailto:info@lomaranchito.com">info@lomaranchito.com</a>.</p>
 
-        <h2>No Personal Data Collection</h2>
-        <p>Lomaranchito.com does not directly collect, store, or process any personal information from visitors. We do not operate contact forms, user accounts, email sign-ups, or any mechanism that gathers your name, email address, or other identifying information.</p>
+            <h3>What we collect directly</h3>
+            <p>Nothing, by default. This site has no accounts, no comment system, and no forms. If you email us, we receive whatever you choose to send (your address and message) and use it only to reply and act on your message. We don't sell or share your correspondence.</p>
 
-        <h2>Google Analytics</h2>
-        <p>This site uses Google Analytics, a web analytics service provided by Google LLC. Google Analytics collects information about how visitors use the site — such as which pages are visited, time spent on the site, and general geographic location based on IP address. This data is aggregated and anonymous, and helps us understand how the site is used so we can improve it.</p>
-        <p>Google Analytics uses cookies to collect this information. You can opt out of Google Analytics tracking by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>. For more information on how Google uses data, visit <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+            <h3>Analytics (Google Analytics 4)</h3>
+            <p>We use Google Analytics to understand, in aggregate, how the site is used — which pages are read, roughly where visitors come from, and what devices they use. Google Analytics sets cookies and collects usage data (such as pages viewed, approximate location derived from IP, and device information) on our behalf. We use this information only to improve the site. You can opt out with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics opt-out browser add-on</a>.</p>
 
-        <h2>Google AdSense Advertising</h2>
-        <p>Lomaranchito.com plans to display advertisements served by Google AdSense, an advertising service provided by Google LLC. Google AdSense may use cookies and web beacons to serve ads based on your prior visits to this site or other sites on the internet. This allows Google and its partners to show you relevant advertisements.</p>
-        <p>You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google's Ad Settings</a>. For more information, see the <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google Advertising Policies</a>.</p>
+            <h3>Advertising (Google AdSense)</h3>
+            <p>This site displays ads served by Google AdSense to cover its costs. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this and other websites. In particular:</p>
+            <ul>
+                <li>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this site and/or other sites on the Internet.</li>
+                <li>You may opt out of personalized advertising by visiting Google's <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Ads Settings</a>.</li>
+                <li>You can opt out of some third-party vendors' use of cookies for personalized advertising at <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer">www.aboutads.info/choices</a>.</li>
+            </ul>
+            <p>Depending on your location, you may see a consent message before ads or measurement cookies are set, and you can change your choice at any time through that message.</p>
 
-        <h2>Cookies &amp; Third-Party Tracking</h2>
-        <p>This site uses cookies placed by third-party services — specifically Google Analytics and Google AdSense — as described above. These cookies are managed by Google, not by Lomaranchito.com directly. You can control or disable cookies through your browser settings. Note that disabling cookies may affect the functionality of some features on this and other websites.</p>
-        <p>We do not sell, trade, or otherwise transfer your data to any parties beyond the third-party services explicitly described in this policy.</p>
+            <h3>Cookies</h3>
+            <p>Cookies are small files stored by your browser. On this site they come from the two services above — analytics and advertising. You can block or delete cookies in your browser settings; the site works fine without them.</p>
 
-        <h2>External Links</h2>
-        <p>This site may contain links to external websites, including social media pages. We are not responsible for the privacy practices or content of those sites and encourage you to review their privacy policies.</p>
+            <h3>Links to other sites</h3>
+            <p>Pages here link to external sites (for example, Facebook and official park or tourism resources). Their privacy practices are their own; this policy covers only lomaranchito.com.</p>
 
-        <h2>Contact</h2>
-        <p>If you have any questions about this privacy policy, you can reach us at: <a href="mailto:privacy@lomaranchito.com">privacy@lomaranchito.com</a></p>
-    </div>
+            <h3>Children</h3>
+            <p>This site is a general-audience travel and culture guide and does not knowingly collect personal information from children.</p>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>© 2026 Lomaranchito.com — An independent guide to Loma Ranchito, Herrera, Panama</p>
-        <div class="footer-fb">
-            <a href="https://www.facebook.com/lomaranchito.ranchito" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.885v2.27h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
-                </svg>
-                Loma Ranchito on Facebook
-            </a>
+            <h3>Your rights</h3>
+            <p>Depending on where you live (for example, the EU/EEA or California), you may have rights to access, correct, or delete personal data held about you. For anything within our direct control (i.e., email correspondence), write to <a href="mailto:info@lomaranchito.com">info@lomaranchito.com</a>. For data held by Google, use the links above or Google's own privacy tools at <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.</p>
+
+            <h3>Changes to this policy</h3>
+            <p>If we change how the site handles data — for example, by adding a newsletter or comments — this page will be updated first, with a new "last updated" date at the top.</p>
         </div>
-        <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
+    </section>
+
+</main>
+
+<footer class="site-foot">
+    <div class="foot-inner">
+        <div>
+            <h4>Loma Ranchito</h4>
+            <p>An independent, personally maintained guide to Loma Ranchito and the wider Herrera–Azuero region of Panama. Written to give this quiet corner of the country the attention it deserves.</p>
+            <p style="margin-top:0.8rem;"><a href="https://www.facebook.com/lomaranchito.ranchito" target="_blank" rel="noopener noreferrer">Loma Ranchito on Facebook</a></p>
         </div>
-    </footer>
+        <div>
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="loma-ranchito.html">Loma Ranchito</a></li>
+                <li><a href="herrera.html">Herrera Province</a></li>
+                <li><a href="azuero.html">Azuero Peninsula</a></li>
+                <li><a href="nature.html">Nature &amp; Outdoors</a></li>
+                <li><a href="getting-there.html">Getting There</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Culture &amp; Site</h4>
+            <ul>
+                <li><a href="festivals.html">Festivals</a></li>
+                <li><a href="food.html">Food &amp; Drink</a></li>
+                <li><a href="culture.html">Culture &amp; Crafts</a></li>
+                <li><a href="about.html">About This Site</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot-bottom">
+        <span>© 2026 lomaranchito.com — An independent guide. Not affiliated with any government or tourism authority.</span>
+        <span><a href="privacy.html">Privacy Policy</a></span>
+    </div>
+</footer>
 
 </body>
 </html>
