@@ -316,9 +316,9 @@ nav.site-nav a.here {
 
 .hero svg.hills, .page-hero svg.hills {
     display: block;
-    width: 100%;
+    width: calc(100% + 3rem);
+    margin: 1rem -1.5rem 0;
     height: auto;
-    margin-top: 1rem;
     position: relative;
 }
 
