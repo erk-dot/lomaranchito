@@ -81,11 +81,22 @@ img { max-width: 100%; display: block; }
     );
 }
 
-/* ---------- header / nav ---------- */
+/* ---------- header + nav: sticky together as one unit ---------- */
+.site-top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: box-shadow 0.35s var(--ease);
+}
+
+.site-top.scrolled {
+    box-shadow: 0 10px 30px rgba(7, 30, 73, 0.35);
+}
+
 header.site-head {
     background: linear-gradient(140deg, var(--blue-ink) 0%, var(--blue-deep) 55%, var(--h-blue) 100%);
     color: var(--cream);
-    padding: 1.2rem 1.5rem 1rem;
+    padding: 1.1rem 1.5rem 0.9rem;
 }
 
 .head-inner {
@@ -93,7 +104,7 @@ header.site-head {
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 0.5rem 2rem;
 }
@@ -106,12 +117,12 @@ header.site-head {
     letter-spacing: 0.5px;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
 }
 
 .brand-logo {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 2px solid rgba(252, 221, 9, 0.55);
     box-shadow: 0 3px 12px rgba(7, 30, 73, 0.45);
@@ -147,28 +158,10 @@ header.site-head {
     flex-shrink: 0;
 }
 
-/* Nav lives inside the banner/hero art (translucent bar along the
-   bottom edge); site.js pins it to the top of the viewport once
-   you've scrolled past that art. */
 nav.site-nav {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 50;
-    background: rgba(7, 30, 73, 0.74);
-    border-top: 1px solid rgba(252, 221, 9, 0.35);
-    padding: 0.85rem 1.5rem;
-    transition: box-shadow 0.35s var(--ease), background 0.35s var(--ease);
-}
-
-nav.site-nav.pinned {
-    position: fixed;
-    top: 0;
-    bottom: auto;
     background: var(--blue-ink);
-    border-top: none;
-    box-shadow: 0 10px 30px rgba(7, 30, 73, 0.35);
+    border-top: 1px solid rgba(252, 221, 9, 0.18);
+    padding: 0 1.5rem;
 }
 
 nav.site-nav ul {
@@ -177,16 +170,15 @@ nav.site-nav ul {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 0 1.6rem;
 }
 
 nav.site-nav a {
     display: inline-block;
-    padding: 0.5rem 0;
+    padding: 0.7rem 0;
     color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     letter-spacing: 1.6px;
     text-transform: uppercase;
     border-bottom: 3px solid transparent;
@@ -200,93 +192,71 @@ nav.site-nav a.here {
     border-bottom-color: var(--h-yellow);
 }
 
-/* ---------- hero ---------- */
-.hero, .page-hero {
-    position: relative;
-    background:
-        radial-gradient(ellipse 90% 60% at 50% -10%, rgba(252, 221, 9, 0.14), transparent 60%),
-        linear-gradient(165deg, var(--blue-ink) 0%, var(--blue-deep) 45%, var(--h-blue) 100%);
-    color: var(--cream);
-    overflow: hidden;
+/* ---------- hero banner: title copy sits in the illustration's own
+   sky color above it; artwork stays undistorted at natural size
+   below, in normal document flow (scrolls with the page) ---------- */
+.hero-banner {
+    background: var(--cream);
     text-align: center;
 }
 
-/* 7-star arc — from the provincial flag */
-.hero::before, .page-hero::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 34px;
-    transform: translateX(-50%);
-    width: 340px;
-    height: 120px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 120'%3E%3Cg fill='%23FCDD09'%3E%3Cpath d='M30 78l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M76 48l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M126 28l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M170 20l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M214 28l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M264 48l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3Cpath d='M310 78l3.1 6.6 7.2 1-5.2 5 1.3 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.1-5 7.1-1z'/%3E%3C/g%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0.22;
-    pointer-events: none;
+.hero-banner-text {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3.2rem 1.5rem 1.8rem;
 }
 
-.hero { padding: 5rem 1.5rem 0; }
-.page-hero { padding: 3.6rem 1.5rem 3.4rem; }
-
-.hero h1, .page-hero h1 {
-    color: var(--white);
-    max-width: 880px;
-    margin: 0 auto 1.2rem;
-    position: relative;
-    text-shadow: 0 2px 24px rgba(7, 30, 73, 0.45);
-    animation: riseIn 0.9s var(--ease) both;
-}
-
-.hero h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); }
-.page-hero h1 { font-size: clamp(2rem, 5vw, 3.3rem); margin-bottom: 0.8rem; }
-
-.hero h1 em, .page-hero h1 em { color: var(--h-yellow); font-style: italic; }
-
-.hero p.lede, .page-hero p.lede {
-    max-width: 660px;
-    margin: 0 auto 2.2rem;
-    font-size: 1.14rem;
-    color: var(--blue-soft);
-    font-weight: 300;
-    position: relative;
-    animation: riseIn 0.9s 0.12s var(--ease) both;
-}
-
-.hero .eyebrow, .page-hero .eyebrow {
+.hero-banner .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.7rem;
     font-size: 0.78rem;
     letter-spacing: 4.5px;
     text-transform: uppercase;
-    color: var(--h-yellow);
+    color: var(--h-blue);
     margin-bottom: 1.2rem;
-    position: relative;
     animation: riseIn 0.9s 0.05s var(--ease) both;
 }
 
-.hero .eyebrow::before, .hero .eyebrow::after,
-.page-hero .eyebrow::before, .page-hero .eyebrow::after {
+.hero-banner .eyebrow::before, .hero-banner .eyebrow::after {
     content: '';
     width: 34px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--h-yellow));
+    background: linear-gradient(90deg, transparent, var(--h-gold));
 }
 
-.hero .eyebrow::after, .page-hero .eyebrow::after {
-    background: linear-gradient(90deg, var(--h-yellow), transparent);
+.hero-banner .eyebrow::after {
+    background: linear-gradient(90deg, var(--h-gold), transparent);
 }
 
-/* hero CTAs */
+.hero-banner h1 {
+    color: var(--blue-deep);
+    max-width: 880px;
+    margin: 0 auto 1.2rem;
+    animation: riseIn 0.9s var(--ease) both;
+}
+
+.hero-banner h1.big { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+.hero-banner h1.small { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 0.8rem; }
+
+.hero-banner h1 em { color: var(--h-blue); font-style: italic; }
+
+.hero-banner p.lede {
+    max-width: 660px;
+    margin: 0 auto 2.2rem;
+    font-size: 1.14rem;
+    color: var(--ink-soft);
+    font-weight: 300;
+    animation: riseIn 0.9s 0.12s var(--ease) both;
+}
+
+/* hero CTAs (home page only) */
 .cta-row {
     display: flex;
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
-    position: relative;
+    margin-bottom: 0.4rem;
     animation: riseIn 0.9s 0.2s var(--ease) both;
 }
 
@@ -315,32 +285,18 @@ nav.site-nav a.here {
 }
 
 .btn-ghost {
-    border: 1.5px solid rgba(255, 255, 255, 0.55);
-    color: var(--white);
+    border: 1.5px solid var(--h-blue);
+    color: var(--h-blue);
 }
 
 .btn-ghost:hover {
-    border-color: var(--h-yellow);
-    color: var(--h-yellow);
+    border-color: var(--blue-deep);
+    color: var(--blue-deep);
+    background: var(--blue-soft);
     transform: translateY(-3px);
 }
 
-.hero svg.hills, .page-hero svg.hills {
-    display: block;
-    width: calc(100% + 3rem);
-    margin: 1rem -1.5rem 0;
-    height: auto;
-    position: relative;
-}
-
-/* ---------- illustrated banner band ---------- */
-.banner-band {
-    position: relative;
-    line-height: 0;
-    background: var(--cream);
-}
-
-.banner-band img {
+.hero-banner-img {
     width: 100%;
     display: block;
 }
@@ -665,17 +621,5 @@ footer.site-foot a:hover { color: var(--h-yellow); }
     .grid-2, .split, .next-links { grid-template-columns: 1fr; }
     .stats { grid-template-columns: 1fr 1fr; }
     .foot-inner { grid-template-columns: 1fr; gap: 1.8rem; }
-    /* Nav overlays the art now, so it can't wrap onto multiple lines
-       without covering hero text below 820px — scroll horizontally
-       instead of growing taller. */
-    nav.site-nav ul {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        gap: 0 1.1rem;
-    }
-    nav.site-nav ul::-webkit-scrollbar { display: none; }
-    .hero::before, .page-hero::before { width: 240px; height: 85px; top: 20px; }
+    nav.site-nav ul { gap: 0 1.1rem; }
 }
