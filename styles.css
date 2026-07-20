@@ -147,17 +147,27 @@ header.site-head {
     flex-shrink: 0;
 }
 
+/* Nav lives inside the banner/hero art (translucent bar along the
+   bottom edge); site.js pins it to the top of the viewport once
+   you've scrolled past that art. */
 nav.site-nav {
-    background: var(--blue-ink);
-    border-top: 1px solid rgba(252, 221, 9, 0.18);
-    padding: 0 1.5rem;
-    position: sticky;
-    top: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 50;
-    transition: box-shadow 0.35s var(--ease);
+    background: rgba(7, 30, 73, 0.74);
+    border-top: 1px solid rgba(252, 221, 9, 0.35);
+    padding: 0.85rem 1.5rem;
+    transition: box-shadow 0.35s var(--ease), background 0.35s var(--ease);
 }
 
-nav.site-nav.scrolled {
+nav.site-nav.pinned {
+    position: fixed;
+    top: 0;
+    bottom: auto;
+    background: var(--blue-ink);
+    border-top: none;
     box-shadow: 0 10px 30px rgba(7, 30, 73, 0.35);
 }
 
@@ -167,15 +177,16 @@ nav.site-nav ul {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0 1.6rem;
 }
 
 nav.site-nav a {
     display: inline-block;
-    padding: 0.7rem 0;
+    padding: 0.5rem 0;
     color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     letter-spacing: 1.6px;
     text-transform: uppercase;
     border-bottom: 3px solid transparent;
@@ -217,7 +228,7 @@ nav.site-nav a.here {
 }
 
 .hero { padding: 5rem 1.5rem 0; }
-.page-hero { padding: 3.6rem 1.5rem 0; }
+.page-hero { padding: 3.6rem 1.5rem 3.4rem; }
 
 .hero h1, .page-hero h1 {
     color: var(--white);
@@ -324,6 +335,7 @@ nav.site-nav a.here {
 
 /* ---------- illustrated banner band ---------- */
 .banner-band {
+    position: relative;
     line-height: 0;
     background: var(--cream);
 }
@@ -653,6 +665,17 @@ footer.site-foot a:hover { color: var(--h-yellow); }
     .grid-2, .split, .next-links { grid-template-columns: 1fr; }
     .stats { grid-template-columns: 1fr 1fr; }
     .foot-inner { grid-template-columns: 1fr; gap: 1.8rem; }
-    nav.site-nav ul { gap: 0 1.1rem; }
+    /* Nav overlays the art now, so it can't wrap onto multiple lines
+       without covering hero text below 820px — scroll horizontally
+       instead of growing taller. */
+    nav.site-nav ul {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0 1.1rem;
+    }
+    nav.site-nav ul::-webkit-scrollbar { display: none; }
     .hero::before, .page-hero::before { width: 240px; height: 85px; top: 20px; }
 }

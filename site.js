@@ -25,13 +25,21 @@
             });
         }
 
-        // Nav elevation on scroll
+        // Nav: lives inside the banner/hero art by default; pins to the
+        // top of the viewport once you've scrolled past that art.
         var nav = document.querySelector('nav.site-nav');
-        if (nav) {
-            var onScroll = function () {
-                nav.classList.toggle('scrolled', window.scrollY > 40);
+        var navHost = nav && nav.closest('.banner-band, .page-hero');
+        if (nav && navHost) {
+            var pinThreshold = 0;
+            var measure = function () {
+                pinThreshold = navHost.getBoundingClientRect().bottom + window.scrollY - nav.offsetHeight;
             };
+            var onScroll = function () {
+                nav.classList.toggle('pinned', window.scrollY > pinThreshold);
+            };
+            measure();
             onScroll();
+            window.addEventListener('resize', measure, { passive: true });
             window.addEventListener('scroll', onScroll, { passive: true });
         }
     }
