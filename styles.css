@@ -203,7 +203,17 @@ nav.site-nav a.here {
 .hero-banner-text {
     max-width: 720px;
     margin: 0 auto;
+    min-height: 300px;
     padding: 3.2rem 1.5rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Home has more content (bigger headline + buttons) — give it its
+   own taller floor instead of stretching every interior page to match */
+.hero-banner-text.home {
+    min-height: 420px;
 }
 
 .hero-banner .eyebrow {
