@@ -633,3 +633,57 @@ footer.site-foot a:hover { color: var(--h-yellow); }
     .foot-inner { grid-template-columns: 1fr; gap: 1.8rem; }
     nav.site-nav ul { gap: 0 1.1rem; }
 }
+
+/* ---------- phone-specific pass (2026-07-22) ----------
+   Scoped to <=600px only, so tablet (601-820px) and desktop (>820px)
+   rules above are untouched. Goals: bigger tap targets, tighter
+   vertical rhythm, decluttered header/nav for small screens. */
+@media (max-width: 600px) {
+    /* buttons: comfortable 48px+ tap target */
+    .btn {
+        min-height: 48px;
+        padding: 0.95rem 1.8rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* hero CTAs stack full-width — each becomes one large, obvious target
+       instead of two buttons squeezed side by side */
+    .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .cta-row .btn { width: 100%; }
+
+    /* nav: scroll as a single row instead of wrapping 10 links into a
+       cramped multi-row block; each link gets real padding so it's a
+       thumb-sized target, not just bare text */
+    nav.site-nav ul {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0 0.2rem;
+        padding-bottom: 2px;
+    }
+    nav.site-nav ul::-webkit-scrollbar { display: none; }
+    nav.site-nav a {
+        padding: 0.85rem 0.9rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* tighter vertical rhythm — less empty scroll before content on
+       small screens */
+    section.band { padding: 2.6rem 1.25rem; }
+    .hero-banner-text { padding: 2.2rem 1.25rem 1.5rem; min-height: 0; }
+    .hero-banner-text.home { min-height: 0; }
+    header.site-head { padding: 0.9rem 1rem 0.75rem; }
+}
+
+/* declutter the header on very small phones — drop the flag/tagline
+   row, keep brand name + nav so the header doesn't feel crowded */
+@media (max-width: 420px) {
+    .brand-tag { display: none; }
+}
