@@ -4,3 +4,8 @@ ga4-key.json
 client_secret_*.json
 token.json
 *.token.json
+
+# Image backups from mobile-optimization pass (couldn't be deleted from
+# sandbox — filesystem denied rm/mv on host-mounted folder; excluded here
+# instead so they don't get committed)
+images/*.bak
