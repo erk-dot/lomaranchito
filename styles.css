@@ -586,6 +586,23 @@ footer.site-foot li { margin-bottom: 0.45rem; }
 footer.site-foot a { color: rgba(255, 255, 255, 0.92); text-decoration: none; transition: color 0.2s var(--ease); }
 footer.site-foot a:hover { color: var(--h-yellow); }
 
+.foot-logo {
+    max-width: 1100px;
+    margin: 2.2rem auto 0;
+    display: flex;
+    justify-content: center;
+}
+
+.foot-logo img {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 3px solid rgba(252, 221, 9, 0.55);
+    box-shadow: 0 8px 26px rgba(7, 30, 73, 0.5);
+    background: var(--cream);
+    object-fit: cover;
+}
+
 .foot-bottom {
     max-width: 1100px;
     margin: 2.5rem auto 0;
