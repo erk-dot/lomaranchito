@@ -605,20 +605,12 @@ footer.site-foot a:hover { color: var(--h-yellow); }
     font-size: 0.78rem;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
     color: rgba(232, 238, 250, 0.7);
 }
 
 .foot-bottom a { color: rgba(255, 255, 255, 0.85); }
-
-.foot-bottom-logo {
-    width: 220px;
-    height: 220px;
-    object-fit: contain;
-    filter: drop-shadow(0 8px 20px rgba(7, 30, 73, 0.5));
-}
 
 /* ---------- motion ---------- */
 @keyframes riseIn {
