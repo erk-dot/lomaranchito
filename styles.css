@@ -123,11 +123,8 @@ header.site-head {
 .brand-logo {
     width: 92px;
     height: 92px;
-    border-radius: 50%;
-    border: 2px solid rgba(252, 221, 9, 0.55);
-    box-shadow: 0 3px 12px rgba(7, 30, 73, 0.45);
-    background: var(--cream);
-    object-fit: cover;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 10px rgba(7, 30, 73, 0.45));
     transition: transform 0.3s var(--ease);
 }
 
@@ -596,11 +593,8 @@ footer.site-foot a:hover { color: var(--h-yellow); }
 .foot-logo img {
     width: 220px;
     height: 220px;
-    border-radius: 50%;
-    border: 3px solid rgba(252, 221, 9, 0.55);
-    box-shadow: 0 8px 26px rgba(7, 30, 73, 0.5);
-    background: var(--cream);
-    object-fit: cover;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 20px rgba(7, 30, 73, 0.5));
 }
 
 .foot-bottom {
