@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mapa de sismos en Panamá: últimos 30 días</title>
+<meta name="description" content="Mapa interactivo y actualizado de los sismos registrados por el USGS en Panamá y sus alrededores durante los últimos 30 días.">
+<link rel="canonical" href="https://www.lomaranchito.com/eq/">
+<meta property="og:title" content="Mapa de sismos en Panamá: últimos 30 días">
+<meta property="og:description" content="Sismos registrados por el USGS en Panamá, con zoom, pueblos y magnitudes. Se actualiza automáticamente.">
+<meta property="og:url" content="https://www.lomaranchito.com/eq/">
+<meta property="og:type" content="website">
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LC1MYZP8YW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LC1MYZP8YW');</script>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9094032428607043" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!-- Site shell (header/nav/footer) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Public+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<script src="/site.js" defer></script>
+<style>
+/* Site headings are dark blue; let the map's headings follow its own light/dark text color */
+.eqwrap h1,.eqwrap h2{color:inherit}
+/* Keep the min-width:560px daily chart scrolling inside its own box instead of widening the page on phones */
+.eqwrap>*{min-width:0}
+</style>
+<style>
+/* Layout: one column — stats, zoomable map, daily bars, largest-events table */
+:root{
+  --bg:#eef2f5; --fg:#16212b; --muted:#5b6b78; --line:#cfd8df;
+  --sea:#d7e3ec; --land:#f6f3ee; --border:#a9b6c0; --panel:#ffffff;
+  --q1:#e8a33a; --q2:#de6a2b; --q3:#c22f2a; --q4:#7d1020; --ring:#16212b;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --fg:#e4ebf0; --muted:#8fa0ad; --line:#24323d;
+  --sea:#132530; --land:#26323b; --border:#3c4d59; --panel:#16212a;
+  --q1:#f2b450; --q2:#f07f3c; --q3:#e9483f; --q4:#ff8fa0; --ring:#e4ebf0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --fg:#e4ebf0; --muted:#8fa0ad; --line:#24323d;
+  --sea:#132530; --land:#26323b; --border:#3c4d59; --panel:#16212a;
+  --q1:#f2b450; --q2:#f07f3c; --q3:#e9483f; --q4:#ff8fa0; --ring:#e4ebf0; color-scheme:dark}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.5}
+[hidden]{display:none!important}
+.eqwrap{max-width:980px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+.eqwrap .backlink{font:500 13px var(--mono);color:var(--muted);text-decoration:none}
+.eqwrap .backlink:hover{color:var(--fg);text-decoration:underline}
+.eq-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.eqwrap h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,6vw,46px);line-height:1.02;margin:4px 0 6px;text-wrap:balance}
+.eq-lede{margin:0;color:var(--muted);max-width:62ch}
+.eq-stats{display:flex;flex-wrap:wrap;gap:10px 28px}
+.eq-stat b{display:block;font-family:var(--display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.eq-stat span{font-size:12px;color:var(--muted)}
+.eq-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.eq-chip{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--fg);cursor:pointer}
+.eq-chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.eq-chip:focus-visible,.eq-zb:focus-visible{outline:2px solid var(--q3);outline-offset:2px}
+.eq-status{margin-left:auto;font:400 12px var(--mono);color:var(--muted);display:flex;gap:8px;align-items:center}
+.eq-mapbox{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--sea);touch-action:none}
+.eq-mapbox svg,.eq-strip svg{display:block;width:100%;height:auto}
+#eq-map{cursor:grab}
+#eq-map:active{cursor:grabbing}
+.eq-zoombar{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--panel)}
+.eq-zb{width:36px;height:36px;border:0;background:var(--panel);color:var(--fg);font:600 18px var(--mono);cursor:pointer}
+.eq-zb+.eq-zb{border-top:1px solid var(--line)}
+.eq-zb.reset{font-size:13px}
+.eq-hint{position:absolute;left:10px;bottom:8px;font:400 11px var(--mono);color:var(--muted);background:color-mix(in srgb,var(--panel) 80%,transparent);padding:2px 6px;border-radius:4px}
+.eq-land{fill:var(--land);stroke:var(--border);stroke-width:.7;vector-effect:non-scaling-stroke}
+.eq-cname{font:600 11px var(--mono);letter-spacing:.12em;fill:var(--muted);text-transform:uppercase}
+.eq-isle{font:italic 400 10.5px var(--body);fill:var(--muted)}
+.eq-town{font-family:var(--body);font-weight:400;fill:var(--fg);fill-opacity:.78;paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.eq-town.t0{font-weight:600;fill-opacity:1}
+.eq-town.ref{font-style:italic}
+.eq-townpt{fill:var(--fg);fill-opacity:.7;stroke:var(--land);stroke-width:1;pointer-events:none}
+.eq-grat{stroke:var(--border);stroke-opacity:.35;stroke-width:.5;fill:none;vector-effect:non-scaling-stroke}
+.eq-gl{font:400 9px var(--mono);fill:var(--muted)}
+.eq-q{stroke:var(--panel);stroke-width:.8;fill-opacity:.82;cursor:pointer;vector-effect:non-scaling-stroke}
+.eq-q.big{fill-opacity:.6}
+.eq-q.sel{stroke:var(--ring);stroke-width:2;fill-opacity:1}
+.eq-star{fill:none;stroke:var(--ring);stroke-width:1.3;stroke-dasharray:3 2;vector-effect:non-scaling-stroke}
+.eq-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);align-items:center}
+.eq-legend i{display:inline-block;border-radius:50%;margin-right:5px;vertical-align:middle}
+.eq-detail{min-height:46px;font-size:14px;padding:10px 12px;border-left:3px solid var(--q3);background:var(--panel);border-radius:0 6px 6px 0}
+.eq-detail .m{font-family:var(--display);font-size:22px;font-weight:700;margin-right:8px}
+.eq-detail .t{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.eq-detail a{color:inherit}
+.eqwrap h2{font-family:var(--display);font-size:22px;font-weight:700;margin:6px 0 4px}
+.eq-strip{overflow-x:auto}
+.eq-bar{fill:var(--q2)}
+.eq-bar.hot{fill:var(--q3)}
+.eq-axis{font:400 10px var(--mono);fill:var(--muted)}
+.eq-base{stroke:var(--line)}
+.eq-tablewrap{overflow-x:auto}
+.eq-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.eq-table th{text-align:left;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:6px 8px 6px 0}
+.eq-table td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.eq-table td.mag{font-family:var(--display);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.eq-table td.when{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--muted)}
+.eq-table tbody tr{cursor:pointer}
+.eq-table tbody tr:hover td{background:color-mix(in srgb,var(--line) 40%,transparent)}
+.eq-note{font-size:12.5px;color:var(--muted);max-width:70ch}
+.eq-note a{color:inherit}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="ribbon" aria-hidden="true"></div>
+
+<div class="site-top">
+    <header class="site-head">
+        <div class="head-inner">
+            <a class="brand" href="/index.html"><img class="brand-logo" src="/images/logo.png" width="200" height="200" alt="Loma Ranchito logo — sombrero pintado over blue hills">Loma <em>Ranchito</em></a>
+            <span class="brand-tag"><svg class="flag-pa" viewBox="0 0 30 20" role="img" aria-label="Flag of Herrera Province"><rect width="30" height="10" fill="#FCDD09"/><rect y="10" width="30" height="10" fill="#0F47AF"/><g fill="#0F47AF"><circle cx="5" cy="7" r="0.9"/><circle cx="8.3" cy="5.2" r="0.9"/><circle cx="11.7" cy="4" r="0.9"/><circle cx="15" cy="3.6" r="0.9"/><circle cx="18.3" cy="4" r="0.9"/><circle cx="21.7" cy="5.2" r="0.9"/><circle cx="25" cy="7" r="0.9"/></g></svg>Herrera · Azuero · Panamá<svg class="flag-pa" viewBox="0 0 30 20" role="img" aria-label="Flag of Panama"><rect width="30" height="20" fill="#FFFFFF"/><rect x="15" width="15" height="10" fill="#D21034"/><rect y="10" width="15" height="10" fill="#005293"/><polygon fill="#005293" points="7.5,2 8.205,4.029 10.353,4.073 8.641,5.371 9.263,7.427 7.5,6.2 5.737,7.427 6.359,5.371 4.647,4.073 6.795,4.029"/><polygon fill="#D21034" points="22.5,12 23.205,14.029 25.353,14.073 23.641,15.371 24.263,17.427 22.5,16.2 20.737,17.427 21.359,15.371 19.647,14.073 21.795,14.029"/></svg></span>
+        </div>
+    </header>
+    <nav class="site-nav" aria-label="Main">
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/loma-ranchito.html">Loma Ranchito</a></li>
+            <li><a href="/herrera.html">Herrera</a></li>
+            <li><a href="/azuero.html">Azuero</a></li>
+            <li><a href="/festivals.html">Festivals</a></li>
+            <li><a href="/food.html">Food &amp; Drink</a></li>
+            <li><a href="/culture.html">Culture</a></li>
+            <li><a href="/nature.html">Nature</a></li>
+            <li><a href="/getting-there.html">Getting There</a></li>
+            <li><a class="here" href="/eq/">Mapa de sismos</a></li>
+            <li><a href="/about.html">About</a></li>
+        </ul>
+    </nav>
+</div>
+
+<main class="eqwrap">
+  <header>
+    <a class="backlink" href="/">← Volver al inicio</a>
+    <div class="eq-eyebrow" id="eq-range">Catálogo USGS · últimos 30 días · Región de Panamá</div>
+    <h1>Sismos en Panamá: últimos 30 días</h1>
+    <p class="eq-lede" id="eq-lede">Cargando los datos más recientes del USGS…</p>
+  </header>
+
+  <div class="eq-stats" id="eq-stats"></div>
+
+  <div class="eq-controls">
+    <div role="group" aria-label="Magnitud mínima" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span class="eq-eyebrow">Mostrar</span>
+      <button class="eq-chip" id="eq-f0" data-min="0" aria-pressed="true">Todos</button>
+      <button class="eq-chip" id="eq-f45" data-min="4.5" aria-pressed="false">M4.5+</button>
+      <button class="eq-chip" id="eq-f5" data-min="5" aria-pressed="false">M5+</button>
+      <button class="eq-chip" id="eq-f6" data-min="6" aria-pressed="false">M6+</button>
+    </div>
+    <div class="eq-status"><span id="eq-updated">—</span><button class="eq-chip" id="eq-refresh">Actualizar</button></div>
+  </div>
+
+  <div class="eq-mapbox">
+    <svg id="eq-map" viewBox="0 0 960 640" role="img" aria-label="Mapa de sismos en Panamá, últimos 30 días"></svg>
+    <div class="eq-zoombar">
+      <button class="eq-zb" id="eq-zin" aria-label="Acercar">+</button>
+      <button class="eq-zb" id="eq-zout" aria-label="Alejar">−</button>
+      <button class="eq-zb reset" id="eq-zreset" aria-label="Restablecer vista">⟲</button>
+    </div>
+    <div class="eq-hint">Pellizca o usa la rueda para hacer zoom · arrastra para mover</div>
+  </div>
+
+  <div class="eq-legend" id="eq-legend"></div>
+  <div class="eq-detail" id="eq-detail" aria-live="polite">Cargando…</div>
+
+  <section>
+    <h2>Sismos por día</h2>
+    <div class="eq-strip"><svg id="eq-strip" viewBox="0 0 960 150" style="min-width:560px"></svg></div>
+  </section>
+
+  <section>
+    <h2>Eventos más fuertes</h2>
+    <div class="eq-tablewrap"><table class="eq-table"><thead><tr><th>Mag.</th><th>Hora de Panamá</th><th>Ubicación</th><th>Profundidad</th></tr></thead><tbody id="eq-rows"></tbody></table></div>
+  </section>
+
+  <p class="eq-note">Fuente: <a href="https://earthquake.usgs.gov/earthquakes/search/" rel="noopener">catálogo de sismos del USGS</a>, eventos dentro del recuadro 5°–10.5°N, 76.5°–84°O. Los datos se consultan directamente al USGS cada vez que abres la página y se actualizan cada 10 minutos. El USGS registra principalmente sismos de M4 o más en esta zona; las réplicas menores que registra el <a href="https://sismosgeociencias.up.ac.pa/" rel="noopener">Instituto de Geociencias de la Universidad de Panamá</a> no aparecen aquí. Las horas están en hora local de Panamá (UTC−5). Líneas costeras: Natural Earth. Ciudades y pueblos: GeoNames.</p>
+</main>
+
+<footer class="site-foot">
+    <div class="foot-inner">
+        <div>
+            <h4>Loma Ranchito</h4>
+            <p>An independent, personally maintained guide to Loma Ranchito and the wider Herrera–Azuero region of Panama. Written to give this quiet corner of the country the attention it deserves.</p>
+            <p style="margin-top:0.8rem;"><a href="https://www.facebook.com/lomaranchito.ranchito" target="_blank" rel="noopener noreferrer">Loma Ranchito on Facebook</a></p>
+        </div>
+        <div>
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="/loma-ranchito.html">Loma Ranchito</a></li>
+                <li><a href="/herrera.html">Herrera Province</a></li>
+                <li><a href="/azuero.html">Azuero Peninsula</a></li>
+                <li><a href="/nature.html">Nature &amp; Outdoors</a></li>
+                <li><a href="/getting-there.html">Getting There</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Culture &amp; Site</h4>
+            <ul>
+                <li><a href="/festivals.html">Festivals</a></li>
+                <li><a href="/food.html">Food &amp; Drink</a></li>
+                <li><a href="/culture.html">Culture &amp; Crafts</a></li>
+                <li><a href="/about.html">About This Site</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot-bottom">
+        <span>© 2026 lomaranchito.com — An independent guide. Not affiliated with any government or tourism authority.</span>
+        <span><a href="/privacy.html">Privacy Policy</a></span>
+    </div>
+    <div class="foot-logo">
+        <img src="/images/logo.png" width="200" height="200" alt="Loma Ranchito logo — sombrero pintado over blue hills">
+    </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(() => {
+// ---------- config ----------
+const BOX = {minlatitude:5, maxlatitude:10.5, minlongitude:-84, maxlongitude:-76.5};
+const DAYS = 30;
+const REFRESH_MS = 10*60*1000;
+const W=960, H=640;
+
+// ---------- helpers ----------
+const $ = id => document.getElementById(id);
+const DIR = {N:"N",S:"S",E:"E",W:"O",NE:"NE",NW:"NO",SE:"SE",SW:"SO",NNE:"NNE",NNW:"NNO",SSE:"SSE",SSW:"SSO",ENE:"ENE",ESE:"ESE",WNW:"ONO",WSW:"OSO"};
+const CTRY = {Panama:"Panamá",Colombia:"Colombia","Costa Rica":"Costa Rica",Nicaragua:"Nicaragua",Ecuador:"Ecuador"};
+const REGION = {
+  "south of Panama":"Al sur de Panamá",
+  "Panama-Colombia border region":"Región fronteriza Panamá-Colombia",
+  "Panama-Costa Rica border region":"Región fronteriza Panamá-Costa Rica",
+  "south of Costa Rica":"Al sur de Costa Rica",
+  "off the coast of Panama":"Frente a la costa de Panamá",
+  "near the coast of Panama":"Cerca de la costa de Panamá",
+  "near the west coast of Colombia":"Cerca de la costa occidental de Colombia",
+  "Panama":"Panamá","Costa Rica":"Costa Rica","Colombia":"Colombia"
+};
+function esPlace(p){
+  if(!p) return "Ubicación no disponible";
+  const m = p.match(/^(\d+) km ([NSEW]+) of (.+), (.+)$/);
+  if(m) return `A ${m[1]} km al ${DIR[m[2]]||m[2]} de ${m[3]}, ${CTRY[m[4]]||m[4]}`;
+  return REGION[p] || p;
+}
+const townOf = p => { const m = p && p.match(/ of (.+), [^,]+$/); return m ? m[1] : null; };
+const fmt = new Intl.DateTimeFormat("es-PA",{timeZone:"America/Panama",day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
+const fmtDate = new Intl.DateTimeFormat("es-PA",{timeZone:"America/Panama",day:"numeric",month:"long"});
+const fmtShort = new Intl.DateTimeFormat("es-PA",{timeZone:"America/Panama",day:"numeric",month:"short"});
+const fmtClock = new Intl.DateTimeFormat("es-PA",{timeZone:"America/Panama",hour:"numeric",minute:"2-digit"});
+const dayKey = d => new Intl.DateTimeFormat("en-CA",{timeZone:"America/Panama"}).format(d);
+const colorFor = m => m>=7?"var(--q4)":m>=6?"var(--q3)":m>=5?"var(--q2)":"var(--q1)";
+const rFor = m => Math.max(3, Math.pow(2.05, m-3.2));
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function ago(t){
+  const min = Math.round((Date.now()-t)/6e4);
+  if(min<60) return `hace ${Math.max(min,1)} min`;
+  const h = Math.round(min/60); if(h<48) return `hace ${h} h`;
+  return `hace ${Math.round(h/24)} días`;
+}
+
+// ---------- map scaffold ----------
+const svg = d3.select("#eq-map");
+const root = svg.append("g");
+const proj = d3.geoMercator().fitExtent([[18,18],[W-18,H-18]],{type:"LineString",coordinates:[[-83.8,5.0],[-76.8,10.4]]});
+const path = d3.geoPath(proj);
+root.append("path").attr("class","eq-grat").attr("d",path(d3.geoGraticule().step([1,1]).extent([[-85,4],[-75,11]])()));
+const landG = root.append("g");
+const labels = root.append("g");
+function lbl(cls,x,y,txt,anchor,dx=0,dy=0){
+  const p=proj([x,y]);
+  return labels.append("text").attr("class",cls).attr("text-anchor",anchor||"start").datum({x:p[0],y:p[1],dx,dy}).text(txt);
+}
+for(let x=-83;x<=-77;x++) lbl("eq-gl",x,4.75,`${-x}°O`,"start",3,-4);
+for(let y=5;y<=10;y++) lbl("eq-gl",-83.95,y,`${y}°N`,"start",0,-3);
+[["PANAMÁ",-81.25,8.72],["COSTA RICA",-83.4,9.75],["COLOMBIA",-76.95,6.4]].forEach(([n,x,y])=>lbl("eq-cname",x,y,n,"middle"));
+lbl("eq-isle",-81.78,7.43,"Isla de Coiba","middle");
+const qg = root.append("g");
+const star = root.append("circle").attr("class","eq-star").attr("r",0);
+const starLbl = labels.append("text").attr("class","eq-cname").attr("text-anchor","middle").datum({x:0,y:0,dx:0,dy:0});
+const townLayer = svg.append("g").attr("aria-hidden","true");
+
+// ---------- state ----------
+let Q = [], biggest = null, sel = null, minMag = 0, k = 1, tNow = d3.zoomIdentity, raf = 0;
+let TOWNS = [], refTowns = new Set();
+
+function sizeToZoom(){
+  labels.selectAll("text").filter(function(){return this!==starLbl.node()})
+    .attr("x",0).attr("y",0).attr("transform",d=>`translate(${d.x+d.dx/k},${d.y+d.dy/k}) scale(${1/k})`);
+  const sk = Math.sqrt(k);
+  qg.selectAll("circle").attr("r",d=>rFor(d.mag)/sk);
+  if(biggest){
+    const [bx,by] = proj([biggest.lon,biggest.lat]);
+    star.attr("cx",bx).attr("cy",by).attr("r",(rFor(biggest.mag)+9)/sk);
+    starLbl.attr("x",0).attr("y",0).attr("transform",`translate(${bx},${by+(rFor(biggest.mag)+9)/sk+16/k}) scale(${1/k})`);
+  }
+}
+
+// towns: screen-space, more appear as you zoom, no overlaps
+function minPop(k){ return k<1.5?15000 : k<2.2?4000 : k<3.2?1200 : k<5?300 : k<8?100 : 0; }
+function placeTowns(){
+  raf=0; const t=tNow, kk=t.k, mp=minPop(kk);
+  const cand = TOWNS.filter(d=>d.pop>=mp || (refTowns.has(d.n) && kk>=1.8));
+  cand.sort((a,b)=>(a.tier===0?0:1)-(b.tier===0?0:1) || refTowns.has(b.n)-refTowns.has(a.n) || b.pop-a.pop);
+  const boxes=[], shown=[];
+  for(const d of cand){
+    const sx=t.applyX(d.x), sy=t.applyY(d.y);
+    if(sx<4||sx>W-60||sy<14||sy>H-14) continue;
+    const fs = d.tier===0?12.5:d.tier===1?11.5:10.5;
+    const w = d.n.length*fs*0.56+6, h=fs+2;
+    const b=[sx+4, sy-h-2, sx+4+w, sy-2];
+    if(boxes.some(o=>b[0]<o[2]&&b[2]>o[0]&&b[1]<o[3]&&b[3]>o[1])) continue;
+    boxes.push(b,[sx-3,sy-3,sx+3,sy+3]); shown.push({...d,sx,sy,fs});
+    if(shown.length>140) break;
+  }
+  const g = townLayer.selectAll("g.tw").data(shown,d=>d.n+d.x).join(en=>{
+    const gg=en.append("g").attr("class","tw");
+    gg.append("circle").attr("class","eq-townpt"); gg.append("text").attr("class","eq-town"); return gg;});
+  g.attr("transform",d=>`translate(${d.sx},${d.sy})`);
+  g.select("circle").attr("r",d=>d.tier===0?3:2);
+  g.select("text").attr("x",5).attr("y",-5).attr("class",d=>"eq-town t"+d.tier+(refTowns.has(d.n)?" ref":"")).style("font-size",d=>d.fs+"px").text(d=>d.n);
+}
+function queueTowns(t){ tNow=t; if(!raf) raf=requestAnimationFrame(placeTowns); }
+
+// zoom
+const zoom = d3.zoom().scaleExtent([1,16]).translateExtent([[0,0],[W,H]])
+  .on("zoom",e=>{k=e.transform.k;root.attr("transform",e.transform);sizeToZoom();queueTowns(e.transform);});
+svg.call(zoom).on("dblclick.zoom",null);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const tr = () => reduce ? svg : svg.transition().duration(300);
+$("eq-zin").onclick=()=>tr().call(zoom.scaleBy,1.8);
+$("eq-zout").onclick=()=>tr().call(zoom.scaleBy,1/1.8);
+$("eq-zreset").onclick=()=>tr().call(zoom.transform,d3.zoomIdentity);
+function focusOn(q,scale=5){
+  const [x,y]=proj([q.lon,q.lat]);
+  tr().call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(Math.max(scale,k)).translate(-x,-y));
+}
+
+// ---------- rendering ----------
+function show(q){
+  sel=q;
+  if(!q){ $("eq-detail").textContent="No hay sismos registrados en este período."; return; }
+  $("eq-detail").innerHTML=`<span class="m">M${q.mag.toFixed(1)}</span>${esc(q.place)} · ${q.dep.toFixed(0)} km de profundidad<br><span class="t">${fmt.format(q.t)} (hora de Panamá) · ${ago(q.t)} · <a href="${esc(q.url)}" target="_blank" rel="noopener">Ver en USGS</a></span>`;
+  qg.selectAll("circle").classed("sel",d=>d===q);
+}
+function drawQuakes(){
+  const sorted = [...Q].sort((a,b)=>b.mag-a.mag);
+  qg.selectAll("circle").data(sorted.filter(q=>q.mag>=minMag),d=>d.id).join("circle")
+    .attr("class",d=>"eq-q"+(d.mag>=7?" big":"")).attr("cx",d=>proj([d.lon,d.lat])[0]).attr("cy",d=>proj([d.lon,d.lat])[1])
+    .attr("fill",d=>colorFor(d.mag)).classed("sel",d=>d===sel).on("click",(e,d)=>show(d))
+    .selectAll("title").data(d=>[d]).join("title").text(d=>`M${d.mag.toFixed(1)} ${d.place}`);
+  star.attr("hidden",biggest?null:"");
+  starLbl.text(biggest?`M${biggest.mag.toFixed(1)} · ${fmtShort.format(biggest.t).toUpperCase()}`:"");
+  sizeToZoom();
+}
+function drawStats(){
+  const dayAgo = Date.now()-864e5;
+  $("eq-stats").innerHTML = [
+    [Q.length,"sismos registrados"],
+    [Q.filter(q=>q.mag>=5).length,"de M5 o más"],
+    [Q.filter(q=>+q.t>=dayAgo).length,"en las últimas 24 horas"],
+    [Q.length?d3.max(Q,q=>q.mag).toFixed(1):"—","magnitud máxima"]
+  ].map(([v,l])=>`<div class="eq-stat"><b>${v}</b><span>${l}</span></div>`).join("");
+  if(biggest){
+    const last = Q.reduce((a,b)=>b.t>a.t?b:a);
+    $("eq-lede").textContent = `El sismo más fuerte de los últimos ${DAYS} días fue de magnitud ${biggest.mag.toFixed(1)} el ${fmtDate.format(biggest.t)}, ${biggest.place.charAt(0).toLowerCase()+biggest.place.slice(1)}. El más reciente fue de magnitud ${last.mag.toFixed(1)}, ${ago(last.t)}.`;
+  } else {
+    $("eq-lede").textContent = `El USGS no registra sismos en esta zona en los últimos ${DAYS} días.`;
+  }
+}
+function drawStrip(){
+  const s=d3.select("#eq-strip"); s.selectAll("*").remove();
+  const sw=960, sh=150, m={l:30,r:8,t:16,b:26};
+  const days=[]; const now=Date.now();
+  for(let i=DAYS;i>=0;i--) days.push(dayKey(new Date(now-i*864e5)));
+  const uniq=[...new Set(days)];
+  const counts=new Map(uniq.map(d=>[d,0])); Q.forEach(q=>{const k2=dayKey(q.t); if(counts.has(k2)) counts.set(k2,counts.get(k2)+1);});
+  const x=d3.scaleBand().domain(uniq).range([m.l,sw-m.r]).padding(.18);
+  const ymax=Math.max(1,d3.max([...counts.values()])); const y=d3.scaleLinear().domain([0,ymax]).nice().range([sh-m.b,m.t]);
+  y.ticks(4).filter(Number.isInteger).forEach(t=>{s.append("line").attr("class","eq-base").attr("x1",m.l).attr("x2",sw-m.r).attr("y1",y(t)).attr("y2",y(t)).attr("stroke-opacity",t?0.5:1);s.append("text").attr("class","eq-axis").attr("x",m.l-6).attr("y",y(t)+3).attr("text-anchor","end").text(t);});
+  const peak = uniq.reduce((a,b)=>counts.get(b)>counts.get(a)?b:a);
+  s.selectAll("rect").data(uniq).join("rect").attr("class",d=>"eq-bar"+(d===peak&&counts.get(d)>0?" hot":""))
+    .attr("x",d=>x(d)).attr("width",x.bandwidth()).attr("y",d=>y(counts.get(d))).attr("height",d=>y(0)-y(counts.get(d)))
+    .append("title").text(d=>`${d}: ${counts.get(d)}`);
+  const lab = d=>fmtShort.format(new Date(d+"T12:00:00-05:00"));
+  uniq.forEach((d,i)=>{ if(i%5===0||i===uniq.length-1) s.append("text").attr("class","eq-axis").attr("x",x(d)+x.bandwidth()/2).attr("y",sh-8).attr("text-anchor","middle").text(lab(d)); });
+  if(counts.get(peak)>0) s.append("text").attr("class","eq-axis").attr("x",x(peak)+x.bandwidth()/2).attr("y",y(counts.get(peak))-4).attr("text-anchor","middle").text(counts.get(peak));
+}
+function drawTable(){
+  const tb=$("eq-rows"); tb.innerHTML="";
+  [...Q].sort((a,b)=>b.mag-a.mag).slice(0,12).forEach(q=>{
+    const row=document.createElement("tr"); row.tabIndex=0;
+    row.innerHTML=`<td class="mag" style="color:${colorFor(q.mag)}">${q.mag.toFixed(1)}</td><td class="when">${fmt.format(q.t)}</td><td>${esc(q.place)}</td><td class="when">${q.dep.toFixed(0)} km</td>`;
+    row.addEventListener("click",()=>{show(q);focusOn(q);document.querySelector(".eq-mapbox").scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"})});
+    row.addEventListener("keydown",e=>{if(e.key==="Enter")row.click()});
+    tb.appendChild(row);
+  });
+}
+function renderAll(){
+  biggest = Q.length ? Q.reduce((a,b)=>b.mag>a.mag?b:a) : null;
+  refTowns = new Set(Q.map(q=>q.town).filter(Boolean));
+  if(sel) sel = Q.find(q=>q.id===sel.id) || null;
+  drawQuakes(); drawStats(); drawStrip(); drawTable(); placeTowns();
+  show(sel || biggest);
+  const end=new Date(), start=new Date(end-DAYS*864e5);
+  $("eq-range").textContent = `Catálogo USGS · ${fmtShort.format(start)} – ${fmtShort.format(end)} · Región de Panamá`;
+}
+
+// ---------- data ----------
+async function loadQuakes(){
+  const btn=$("eq-refresh"); btn.disabled=true; $("eq-updated").textContent="Actualizando…";
+  try{
+    const start = new Date(Date.now()-DAYS*864e5).toISOString().slice(0,19);
+    const qs = new URLSearchParams({format:"geojson",orderby:"time",starttime:start,...BOX});
+    const res = await fetch(`https://earthquake.usgs.gov/fdsnws/event/1/query?${qs}`,{cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const gj = await res.json();
+    Q = gj.features.filter(f=>f.properties.mag!=null && f.properties.type==="earthquake").map(f=>({
+      id:f.id, t:new Date(f.properties.time), lon:f.geometry.coordinates[0], lat:f.geometry.coordinates[1],
+      dep:f.geometry.coordinates[2]??0, mag:f.properties.mag, place:esPlace(f.properties.place), town:townOf(f.properties.place),
+      url:f.properties.url
+    }));
+    renderAll();
+    $("eq-updated").textContent = `Actualizado ${fmtClock.format(new Date())}`;
+  }catch(err){
+    console.error(err);
+    $("eq-updated").textContent = "Sin conexión con el USGS";
+    if(!Q.length){
+      $("eq-lede").textContent = "No se pudieron cargar los datos del USGS. Revisa tu conexión y toca «Actualizar» en unos minutos.";
+      $("eq-detail").textContent = "Sin datos por ahora.";
+    }
+  }finally{ btn.disabled=false; }
+}
+async function loadBase(){
+  const [land, towns] = await Promise.all([
+    fetch("land.json").then(r=>r.json()),
+    fetch("towns.json").then(r=>r.json())
+  ]);
+  landG.selectAll("path").data(land.features).join("path").attr("class","eq-land").attr("d",path);
+  TOWNS = towns.map(([n,lon,lat,pop])=>{const p=proj([lon,lat]);return {n,x:p[0],y:p[1],pop,tier:pop>=40000?0:pop>=5000?1:2}});
+  placeTowns();
+}
+
+// ---------- controls ----------
+document.querySelectorAll(".eq-chip[data-min]").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".eq-chip[data-min]").forEach(c=>c.setAttribute("aria-pressed",c===b));
+  minMag=+b.dataset.min; drawQuakes();
+}));
+$("eq-refresh").addEventListener("click",loadQuakes);
+setInterval(()=>{ if(document.visibilityState==="visible") loadQuakes(); }, REFRESH_MS);
+
+$("eq-legend").innerHTML=[[4.2,"Menor de M5"],[5.2,"M5–5.9"],[6.3,"M6–6.9"],[7.7,"M7 o más"]]
+  .map(([m,l])=>{const r=Math.min(rFor(m),14);return `<span><i style="width:${r*2}px;height:${r*2}px;background:${colorFor(m)}"></i>${l}</span>`}).join("")
+  +`<span>El tamaño del círculo aumenta con la magnitud</span><span>Haz zoom para ver más pueblos · <em>cursiva</em> = pueblos que cita el USGS</span>`;
+
+loadBase().catch(err=>console.error("Base map:",err));
+loadQuakes();
+})();
+</script>
+</body>
+</html>
