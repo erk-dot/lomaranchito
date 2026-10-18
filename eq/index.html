@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mapa de sismos en Panamá: últimos 30 días</title>
 <meta name="description" content="Mapa interactivo y actualizado de los sismos registrados por el USGS en Panamá y sus alrededores durante los últimos 30 días.">
-<link rel="canonical" href="https://www.lomaranchito.com/eq/">
+<link rel="canonical" href="https://lomaranchito.com/eq/">
 <meta property="og:title" content="Mapa de sismos en Panamá: últimos 30 días">
 <meta property="og:description" content="Sismos registrados por el USGS en Panamá, con zoom, pueblos y magnitudes. Se actualiza automáticamente.">
-<meta property="og:url" content="https://www.lomaranchito.com/eq/">
+<meta property="og:url" content="https://lomaranchito.com/eq/">
 <meta property="og:type" content="website">
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LC1MYZP8YW"></script>
@@ -24,11 +24,14 @@
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
 <script src="/site.js" defer></script>
+<!-- Light/dark toggle: apply the saved choice before first paint; no saved choice = follow the system -->
+<script>try{var t=localStorage.getItem("eq-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 /* Site headings are dark blue; let the map's headings follow its own light/dark text color */
 .eqwrap h1,.eqwrap h2{color:inherit}
 /* Keep the min-width:560px daily chart scrolling inside its own box instead of widening the page on phones */
 .eqwrap>*{min-width:0}
+.eq-theme{float:right;margin-left:12px}
 </style>
 <style>
 /* Layout: one column — stats, zoomable map, daily bars, largest-events table */
@@ -143,6 +146,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px
 
 <main class="eqwrap">
   <header>
+    <button class="eq-chip eq-theme" id="eq-theme" type="button">☾ Modo oscuro</button>
     <a class="backlink" href="/">← Volver al inicio</a>
     <div class="eq-eyebrow" id="eq-range">Catálogo USGS · últimos 30 días · Región de Panamá</div>
     <h1>Sismos en Panamá: últimos 30 días</h1>
@@ -466,6 +470,26 @@ $("eq-legend").innerHTML=[[4.2,"Menor de M5"],[5.2,"M5–5.9"],[6.3,"M6–6.9"],
 
 loadBase().catch(err=>console.error("Base map:",err));
 loadQuakes();
+})();
+</script>
+<script>
+(() => {
+  const btn = document.getElementById("eq-theme"), root = document.documentElement;
+  const sys = matchMedia("(prefers-color-scheme: dark)");
+  const current = () => root.dataset.theme || (sys.matches ? "dark" : "light");
+  const label = () => {
+    const dark = current() === "dark";
+    btn.textContent = dark ? "☀ Modo claro" : "☾ Modo oscuro";
+    btn.setAttribute("aria-label", dark ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+  };
+  btn.addEventListener("click", () => {
+    const next = current() === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("eq-theme", next); } catch (e) {}
+    label();
+  });
+  sys.addEventListener("change", label);
+  label();
 })();
 </script>
 </body>
