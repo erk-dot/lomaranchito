@@ -36,6 +36,7 @@
 .eq-sort::after{content:"↕";opacity:.45}
 th[aria-sort="descending"] .eq-sort{color:var(--fg)}
 th[aria-sort="descending"] .eq-sort::after{content:"▼";opacity:1}
+.eq-more{margin-top:12px}
 .eq-sort:focus-visible{outline:2px solid var(--q3);outline-offset:2px;border-radius:2px}
 </style>
 <style>
@@ -192,6 +193,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px
   <section>
     <h2 id="eq-rows-title">Eventos más fuertes</h2>
     <div class="eq-tablewrap"><table class="eq-table"><thead><tr><th aria-sort="descending"><button class="eq-sort" type="button" data-sort="mag" title="Ordenar por magnitud">Mag.</button></th><th aria-sort="none"><button class="eq-sort" type="button" data-sort="time" title="Ordenar por hora">Hora de Panamá</button></th><th>Ubicación</th><th>Profundidad</th></tr></thead><tbody id="eq-rows"></tbody></table></div>
+    <button class="eq-chip eq-more" id="eq-more" type="button" hidden></button>
   </section>
 
   <p class="eq-note">Fuente: <a href="https://earthquake.usgs.gov/earthquakes/search/" rel="noopener">catálogo de sismos del USGS</a>, eventos dentro del recuadro 5°–10.5°N, 76.5°–84°O. Los datos se consultan directamente al USGS cada vez que abres la página y se actualizan cada 10 minutos. El USGS registra principalmente sismos de M4 o más en esta zona; las réplicas menores que registra el <a href="https://sismosgeociencias.up.ac.pa/" rel="noopener">Instituto de Geociencias de la Universidad de Panamá</a> no aparecen aquí. Las horas están en hora local de Panamá (UTC−5). Líneas costeras: Natural Earth. Ciudades y pueblos: GeoNames.</p>
@@ -302,7 +304,7 @@ const townLayer = svg.append("g").attr("aria-hidden","true");
 
 // ---------- state ----------
 let Q = [], biggest = null, sel = null, minMag = 0, k = 1, tNow = d3.zoomIdentity, raf = 0;
-let TOWNS = [], refTowns = new Set(), sortBy = "mag";
+let TOWNS = [], refTowns = new Set(), sortBy = "mag", showAll = false;
 
 function sizeToZoom(){
   labels.selectAll("text").filter(function(){return this!==starLbl.node()})
@@ -409,9 +411,12 @@ function drawStrip(){
 function drawTable(){
   const tb=$("eq-rows"); tb.innerHTML="";
   const byTime = sortBy==="time";
-  $("eq-rows-title").textContent = byTime ? "Eventos más recientes" : "Eventos más fuertes";
+  $("eq-rows-title").textContent = showAll ? "Todos los eventos" : byTime ? "Eventos más recientes" : "Eventos más fuertes";
+  const more=$("eq-more"); more.hidden = Q.length<=12;
+  more.textContent = showAll ? "Mostrar menos" : `Mostrar los ${Q.length} eventos`;
+  more.setAttribute("aria-expanded", showAll);
   document.querySelectorAll(".eq-sort").forEach(b=>b.parentElement.setAttribute("aria-sort",b.dataset.sort===sortBy?"descending":"none"));
-  [...Q].sort(byTime ? (a,b)=>b.t-a.t : (a,b)=>b.mag-a.mag).slice(0,12).forEach(q=>{
+  [...Q].sort(byTime ? (a,b)=>b.t-a.t : (a,b)=>b.mag-a.mag).slice(0,showAll?Infinity:12).forEach(q=>{
     const row=document.createElement("tr"); row.tabIndex=0;
     row.innerHTML=`<td class="mag" style="color:${colorFor(q.mag)}">${q.mag.toFixed(1)}</td><td class="when">${fmt.format(q.t)}</td><td>${esc(q.place)}</td><td class="when">${q.dep.toFixed(0)} km</td>`;
     row.addEventListener("click",()=>{show(q);focusOn(q);document.querySelector(".eq-mapbox").scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"})});
@@ -466,6 +471,13 @@ async function loadBase(){
 
 // ---------- controls ----------
 document.querySelectorAll(".eq-sort").forEach(b=>b.addEventListener("click",()=>{ sortBy=b.dataset.sort; drawTable(); }));
+$("eq-more").addEventListener("click",()=>{
+  showAll=!showAll; drawTable();
+  if(!showAll){ // land the title just below the site's sticky header
+    const bar=document.querySelector(".site-top"), off=(bar?bar.offsetHeight:0)+12;
+    scrollTo({top:$("eq-rows-title").getBoundingClientRect().top+scrollY-off,behavior:reduce?"auto":"smooth"});
+  }
+});
 document.querySelectorAll(".eq-chip[data-min]").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".eq-chip[data-min]").forEach(c=>c.setAttribute("aria-pressed",c===b));
   minMag=+b.dataset.min; drawQuakes();
